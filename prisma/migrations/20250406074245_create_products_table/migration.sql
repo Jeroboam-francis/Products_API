@@ -1,6 +1,6 @@
 -- CreateTable
 CREATE TABLE "products_table" (
-    "id" TEXT NOT NULL,
+    "productId" TEXT NOT NULL,
     "productTitle" TEXT NOT NULL,
     "productDescription" TEXT NOT NULL,
     "unitsLeft" INTEGER NOT NULL,
@@ -9,5 +9,5 @@ CREATE TABLE "products_table" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "products_table_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "products_table_pkey" PRIMARY KEY ("productId")
 );

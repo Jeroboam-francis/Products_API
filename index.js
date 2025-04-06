@@ -38,11 +38,11 @@ app.post("/products", validateProduct, async (req, res) => {
 // Get all products
 app.get("/products", async (req, res) => {
   try {
-    const getAllProducts = await client.products.findMany();
+    const allProducts = await client.products.findMany();
     res.status(200).json({
       status: "success",
       message: "Products fetched successfully",
-      data: getAllProducts,
+      data: allProducts,
     });
   } catch (e) {}
   res.status(500).json({
@@ -51,9 +51,31 @@ app.get("/products", async (req, res) => {
   });
 });
 
-app.get("/products/:id", (req, res) => {
-  const id = req.params.id;
-  res.send(`Getting product with id ${id}`);
+// Get a single product using id parameter
+app.get("/products/:productId", async (req, res) => {
+  const { productId } = req.params;
+  try {
+    const product = await client.products.findFirst({
+      where: { productId },
+    });
+
+    if (!product) {
+      return res.status(404).json({
+        status: "error",
+        message: "Product not found",
+      });
+    }
+    res.status(200).json({
+      status: "success",
+      message: "Product fetched successfully",
+      data: product,
+    });
+  } catch (e) {
+    res.status(500).json({
+      status: "error",
+      message: "Product failed to fetche",
+    });
+  }
 });
 
 app.put("/products/:id", (req, res) => {

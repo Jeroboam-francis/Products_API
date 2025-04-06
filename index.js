@@ -35,7 +35,7 @@ app.post("/products", validateProduct, async (req, res) => {
   }
 });
 
-// Get all products
+// Get all products created
 app.get("/products", async (req, res) => {
   try {
     const allProducts = await client.products.findMany();
@@ -78,10 +78,39 @@ app.get("/products/:productId", async (req, res) => {
   }
 });
 
-app.put("/products/:id", (req, res) => {
-  const id = req.params.id;
-  const product = req.body;
-  res.send(`Updating product with id ${id} to name ${product.name}`);
+// Updates product found  using id
+app.patch("/products/:productId", async (req, res) => {
+  const { productId } = req.params;
+  const {
+    productTitle,
+    productDescription,
+    unitsLeft,
+    pricePerUnit,
+    isOnOffer,
+  } = req.body;
+  try {
+    const updatedProduct = await client.products.update({
+      where: { productId },
+      data: {
+        productTitle: productTitle && productTitle,
+        productDescription: productDescription && productDescription,
+        unitsLeft: unitsLeft && unitsLeft,
+        pricePerUnit: pricePerUnit && pricePerUnit,
+        isOnOffer: isOnOffer && isOnOffer,
+      },
+    });
+
+    res.status(200).json({
+      status: "success",
+      message: "Product updated successfully",
+      data: updatedProduct,
+    });
+  } catch (e) {
+    res.status(500).json({
+      status: "error",
+      message: "Product failed to update",
+    });
+  }
 });
 
 app.delete("/products/:id", (req, res) => {

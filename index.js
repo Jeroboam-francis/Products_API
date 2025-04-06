@@ -7,6 +7,7 @@ const app = express();
 
 app.use(express.json());
 
+// Create a Product
 app.post("/products", validateProduct, async (req, res) => {
   const { productTitle, productDescription, unitsLeft, pricePerUnit } =
     req.body;
@@ -34,8 +35,20 @@ app.post("/products", validateProduct, async (req, res) => {
   }
 });
 
-app.get("/products", (req, res) => {
-  res.send("Getting all products");
+// Get all products
+app.get("/products", async (req, res) => {
+  try {
+    const getAllProducts = await client.products.findMany();
+    res.status(200).json({
+      status: "success",
+      message: "Products fetched successfully",
+      data: getAllProducts,
+    });
+  } catch (e) {}
+  res.status(500).json({
+    status: "error",
+    message: "An error occurred while fetching the product",
+  });
 });
 
 app.get("/products/:id", (req, res) => {

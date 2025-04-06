@@ -112,10 +112,25 @@ app.patch("/products/:productId", async (req, res) => {
     });
   }
 });
+// Delete a product using id
+app.delete("/products/:productId", async (req, res) => {
+  const { productId } = req.params;
+  await client.products.delete({
+    where: { productId },
+  });
 
-app.delete("/products/:id", (req, res) => {
-  const id = req.params.id;
-  res.send(`Deleting product with id ${id}`);
+  res.status(200).json({
+    status: "success",
+    message: "Product deleted successfully",
+  });
+
+  try {
+  } catch (e) {
+    res.status(500).json({
+      status: "error",
+      message: "Product failed to delete",
+    });
+  }
 });
 
 let port = 3000;
